@@ -1,0 +1,17 @@
+-- local client = vim.lsp.start_client {
+--   name = 'mylsp',
+--   cmd = { '/Users/elyzk1/projects/programming/mylsp/main' },
+-- }
+--
+-- if not client then
+--   vim.notify 'client broken'
+--   return
+-- end
+--
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = 'markdown',
+--   callback = function()
+--     vim.lsp.buf_attach_client(0, client)
+--     vim.notify 'lol!'
+--   end,
+-- })
