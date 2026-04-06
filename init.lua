@@ -863,6 +863,8 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
+        ['<Tab>'] = false,
+        ['<S-Tab>'] = false,
         ['<C-k>'] = false,
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:

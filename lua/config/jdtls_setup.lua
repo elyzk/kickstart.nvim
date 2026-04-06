@@ -41,7 +41,6 @@ M.setup = function()
     local home = os.getenv 'HOME'
     local workspace_path = home .. '/java/workspaces/'
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-    vim.notify(project_name)
     local workspace_dir = workspace_path .. project_name
     return workspace_dir
   end
@@ -222,43 +221,23 @@ M.setup = function()
     on_attach = on_attach,
   }
 
-  local wk = require 'which-key'
-
-  wk.add {
-    { '<leader>j',   group = 'Java',                                    nowait = true,          remap = false },
-    {
-      '<leader>jb',
-      ":TermExec cmd='mvn clean install -U -X -DskipTests'<CR>",
-      desc = 'Clean Install - no tests',
-      nowait = true,
-      remap = false,
-    },
-    {
-      '<leader>ji',
-      ":TermExec cmd='mvn clean install -U -X'<CR>",
-      desc = 'Clean Install',
-      nowait = true,
-      remap = false,
-    },
-    {
-      '<leader>jo',
-      ":lua require('jdtls').organize_imports()<CR>",
-      desc = 'Organize Imports',
-    },
-    { '<leader>jt',  group = 'Test',                                    nowait = true,          remap = false },
-    { '<leader>jtc', ":lua require('jdtls').test_class()<CR>",          desc = 'Class' },
-    { '<leader>jtm', ":lua require('jdtls').test_nearest_method()<CR>", desc = 'Nearest Method' },
-    { '<leader>jd',  group = 'Debug',                                   nowait = true,          remap = false },
-    { '<leader>jr',  group = 'Run',                                     nowait = true,          remap = false },
-    {
-      '<leader>jrd',
-      ":TermExec cmd='mvn spring-boot:run -Pdev'",
-      desc = 'Run Dev Profile',
-      nowait = true,
-      remap = false,
-    },
-    { '<leader>jg', group = 'Generate', nowait = true, remap = false },
-  }
+  vim.keymap.set('n', '<leader>r', function()
+    local root = vim.fs.root(0, root_markers)
+    if root then
+      vim.cmd(string.format("TermExec cmd='mvn spring-boot:run' dir='%s'", root))
+    else
+      vim.cmd "TermExec cmd='mvn spring-boot:run'"
+    end
+  end, { desc = 'Java [R]un at Root' })
+  vim.keymap.set('n', '<leader>dc', require('dap').continue, { desc = 'Java [D]ebug [C]ontinue' })
+  vim.keymap.set('n', '<leader>dt', function()
+    require('dap').terminate()
+    require('dapui').close()
+  end, { desc = 'Java [D]ebug [T]erminate' })
+  vim.keymap.set('n', '<leader>db', require('dap').toggle_breakpoint, { desc = 'Java Toggle [B]reakpoint' })
+  vim.keymap.set('n', '<leader>du', function()
+    require('dapui').toggle()
+  end, { desc = 'Toggle DAP [U]I' })
 
   require('jdtls').start_or_attach(config)
 end
